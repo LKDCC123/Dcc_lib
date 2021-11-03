@@ -204,3 +204,6 @@ void fnvEzSpline(double *pos_out, int maxProgN, double t0_in, double t1_in, doub
 void fnvObtainTransMat3(double * dptTransMat, char cAxis, double dQ, double dPos[3]);
 void fnvTic();
 double fnvToc(int nDispTimeFlag);
+int fnnSlowDown(double * dptDataIn, int nDataLen, int nSlowTimes, double * dptDataOut);
+int fnnRdFile(char * sFileName, int nRow, int nCol, double * dDataName);
+void fnvWtFile(char * sFileName, int nRow, int nCol, double * dDataName);

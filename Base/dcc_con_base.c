@@ -366,3 +366,34 @@ double fnvToc(int nDispTimeFlag) {
 	if (nDispTimeFlag == 1) printf("Time = %lf\n", time_);
 	return time_;
 }
+
+int fnnSlowDown(double * dptDataIn, int nDataLen, int nSlowTimes, double * dptDataOut) {
+	int nKout = 0;
+	for (int i = 0; i < nDataLen - 2; i++) {
+		double dIncTemp = (*(dptDataIn + i + 1) - *(dptDataIn + i)) / ((double)nSlowTimes);
+		for (int j = 0; j < nSlowTimes; j++) *(dptDataOut + nKout) = *(dptDataIn + i) + (double)j * dIncTemp, nKout++;
+	}
+	return nKout;
+}
+
+int fnnRdFile(char * sFileName, int nRow, int nCol, double * dDataName) {
+	FILE * Ftp;
+	double dDataTemp;
+	if ((Ftp = fopen(sFileName, "r")) == NULL) {
+		printf("Can't open file %s !\n", sFileName);
+		return 0;
+	}
+	for (int i = 0; i < nRow; i++) for (int j = 0; j < nCol; j++) fscanf(Ftp, "%lf", &dDataTemp), *(dDataName + i * nCol + j) = dDataTemp;
+	fclose(Ftp);
+	return 1;
+}
+
+void fnvWtFile(char * sFileName, int nRow, int nCol, double * dDataName) {
+	FILE * Ftp = fopen(sFileName, "w");
+	double dDataTemp;
+	for (int i = 0; i < nRow; i++) {
+		for (int j = 0; j < nCol; j++) dDataTemp = *(dDataName + i * nCol + j), fprintf(Ftp, "%lf\t", dDataTemp);
+		fprintf(Ftp, "\n");
+	}
+	fclose(Ftp);
+}
