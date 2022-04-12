@@ -4,9 +4,9 @@
 #include<stdio.h>
 
 // for timer ================================================
-LARGE_INTEGER nFreq;//LARGE_INTEGERÔÚ64Î»ÏµÍ³ÖÐÊÇLONGLONG£¬ÔÚ32Î»ÏµÍ³ÖÐÊÇ¸ßµÍÁ½¸ö32Î»µÄLONG£¬ÔÚwindows.hÖÐÍ¨¹ýÔ¤±àÒëºê×÷¶¨Òå
-LARGE_INTEGER nBeginTime;//¼ÇÂ¼¿ªÊ¼Ê±µÄ¼ÆÊýÆ÷µÄÖµ
-LARGE_INTEGER nEndTime;//¼ÇÂ¼Í£Ö¹Ê±µÄ¼ÆÊýÆ÷µÄÖµ
+LARGE_INTEGER nFreq;//LARGE_INTEGERï¿½ï¿½64Î»ÏµÍ³ï¿½ï¿½ï¿½ï¿½LONGLONGï¿½ï¿½ï¿½ï¿½32Î»ÏµÍ³ï¿½ï¿½ï¿½Ç¸ßµï¿½ï¿½ï¿½ï¿½ï¿½32Î»ï¿½ï¿½LONGï¿½ï¿½ï¿½ï¿½windows.hï¿½ï¿½Í¨ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+LARGE_INTEGER nBeginTime;//ï¿½ï¿½Â¼ï¿½ï¿½Ê¼Ê±ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+LARGE_INTEGER nEndTime;//ï¿½ï¿½Â¼Í£Ö¹Ê±ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 double time_start, time_end, time_;
 double j_timer = 10.0;
 // for timer ================================================
@@ -177,7 +177,7 @@ void fnvFifthSpline(double *pos_out, int maxProgN, double x0, double v0, double 
 			k++;
 		}
 		for (int i = k1; i < maxProgN + k0; i++) {
-			pos_out[k] = pos_out[k1 - k0 - 1];
+			pos_out[k] = pos_out[k1 - k0 - 2];
 			k++;
 		}
 	}
@@ -295,7 +295,8 @@ void fnvEzSpline(double *pos_out, int maxProgN, double t0_in, double t1_in, doub
 		}
 	}
 }
-
+/** Obtain transition matrix: 
+*/
 void fnvObtainTransMat3(double * dptTransMat, char cAxis, double dQ, double dPos[3]) {
 	double dTransMat[4][4] = { 0.0 };
 	if (cAxis == 'x') {
@@ -354,15 +355,15 @@ void fnvObtainTransMat3(double * dptTransMat, char cAxis, double dQ, double dPos
 }
 
 void fnvTic() {
-	QueryPerformanceFrequency(&nFreq); // »ñÈ¡ÏµÍ³Ê±ÖÓÆµÂÊ
-	QueryPerformanceCounter(&nBeginTime); // »ñÈ¡¿ªÊ¼Ê±¿Ì¼ÆÊýÖµ
+	QueryPerformanceFrequency(&nFreq); // ï¿½ï¿½È¡ÏµÍ³Ê±ï¿½ï¿½Æµï¿½ï¿½
+	QueryPerformanceCounter(&nBeginTime); // ï¿½ï¿½È¡ï¿½ï¿½Ê¼Ê±ï¿½Ì¼ï¿½ï¿½ï¿½Öµ
 }
 
 double fnvToc(int nDispTimeFlag) {
-	QueryPerformanceCounter(&nEndTime); // »ñÈ¡Í£Ö¹Ê±¿Ì¼ÆÊýÖµ
+	QueryPerformanceCounter(&nEndTime); // ï¿½ï¿½È¡Í£Ö¹Ê±ï¿½Ì¼ï¿½ï¿½ï¿½Öµ
 	time_end = ((double)(nEndTime.QuadPart) / (double)nFreq.QuadPart);
 	time_start = ((double)(nBeginTime.QuadPart) / (double)nFreq.QuadPart);
-	time_ = time_end - time_start; //£¨¿ªÊ¼-Í£Ö¹£©/ÆµÂÊ¼´ÎªÃëÊý£¬¾«È·µ½Ð¡Êýµãºó6Î»
+	time_ = time_end - time_start; //ï¿½ï¿½ï¿½ï¿½Ê¼-Í£Ö¹ï¿½ï¿½/Æµï¿½Ê¼ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½6Î»
 	if (nDispTimeFlag == 1) printf("Time = %lf\n", time_);
 	return time_;
 }
@@ -397,3 +398,104 @@ void fnvWtFile(char * sFileName, int nRow, int nCol, double * dDataName) {
 	}
 	fclose(Ftp);
 }
+
+void fnvClearPosition(dccPositional *stData) {
+	for(int i = 0; i < 9; i++) *(&(stData->x) + i) = 0.0;
+}
+
+double fndAbsWeight(double dDataIn1, double dDataIn2, char cMode) {
+	if(cMode == 'B') { // choose the bigger one 
+		if(fabs(dDataIn1) >= fabs(dDataIn2)) return dDataIn1;
+		else if(fabs(dDataIn1) < fabs(dDataIn2)) return dDataIn2;
+		else {
+			printf("Wrong in fndAbsWeight1!\n");
+			return 0;
+		}
+	}
+	else if(cMode == 'S') { // choose the smaller one 
+		if(fabs(dDataIn1) <= fabs(dDataIn2)) return dDataIn1;
+		else if(fabs(dDataIn1) > fabs(dDataIn2)) return dDataIn2;
+		else {
+			printf("Wrong in fndAbsWeight2!\n");
+			return 0;
+		}
+	}
+	else {
+		printf("Wrong in fndAbsWeight3!\n");
+		return 0;
+	}
+}
+
+double fndGetSign(double dDataIn) {
+	if(fabs(dDataIn) > 1e-6) return (dDataIn / fabs(dDataIn));
+	else return 1.0;
+}
+
+double fndAbsLimit(double dDataIn, double dAbsLimit[2]/*should be active value*/) {
+	double dDataOut = dDataIn;
+	if(fabs(dDataIn) < dAbsLimit[0]) dDataOut = fndGetSign(dDataIn) * dAbsLimit[0];
+	if(fabs(dDataIn) > dAbsLimit[1]) dDataOut = fndGetSign(dDataIn) * dAbsLimit[1];
+	return dDataOut;
+}
+
+double fndActivate(double dDataIn, double dTrigger, char cMode) {
+	if(cMode == 'B') { // bigger trigger
+		if(dDataIn > dTrigger) return 1.0;
+		else return 0.0;
+	}
+	else if(cMode == 'S') { // smaller trigger
+		if(dDataIn < dTrigger) return 1.0;
+		else return 0.0;
+	}
+	else {
+		printf("Wrong in fndActivate!\n");
+		return 0.0;
+	}
+}
+
+void fnvLinearC2D(double * dAc, double * dBc, double * dAd, double *dBd, double dT, int nDim, int nInputNum) {
+	for(int i = 0; i < nDim; i++) {
+		for(int j = 0; j < nDim; j++) *(dAd + i * nDim + j) = dT * *(dAc + i * nDim + j) + (double)(i == j);
+		for(int k = 0; k < nInputNum; k++) *(dBd + i * nInputNum + k) = dT * *(dBc + i * nInputNum + k);
+	}
+}
+
+/** 5th Spline with position, velocity, acceleration output
+* InputVal: x0, v0, a0, t0, x1, v1, a1, t1, CONTROL_T, ModeFlag
+* OutputVal: &DataOut
+*/
+void fnvFifthSplineOutputPVA(double *pos_out, double *vel_out, double *acc_out, int maxProgN, double x0, double v0, double a0, double t0, double x1, double v1, double a1, double t1, double control_t)
+{
+	double b_spline[6] = { 0 };
+	b_spline[0] = (1.0 / pow(t0 - t1, 5.0)*((t0*t0*t0*t0*t0)*x1*2.0 - (t1*t1*t1*t1*t1)*x0*2.0 + t0*(t1*t1*t1*t1*t1)*v0*2.0 - (t0*t0*t0*t0*t0)*t1*v1*2.0 + t0*(t1*t1*t1*t1)*x0*1.0E+1 - (t0*t0*t0*t0)*t1*x1*1.0E+1 - a0*(t0*t0)*(t1*t1*t1*t1*t1) + a0*(t0*t0*t0)*(t1*t1*t1*t1)*2.0 - a0*(t0*t0*t0*t0)*(t1*t1*t1) + a1*(t0*t0*t0)*(t1*t1*t1*t1) - a1*(t0*t0*t0*t0)*(t1*t1*t1)*2.0 + a1*(t0*t0*t0*t0*t0)*(t1*t1) - (t0*t0)*(t1*t1*t1*t1)*v0*1.0E+1 + (t0*t0*t0)*(t1*t1*t1)*v0*8.0 - (t0*t0*t0)*(t1*t1*t1)*v1*8.0 + (t0*t0*t0*t0)*(t1*t1)*v1*1.0E+1 - (t0*t0)*(t1*t1*t1)*x0*2.0E+1 + (t0*t0*t0)*(t1*t1)*x1*2.0E+1)) / 2.0;
+	b_spline[1] = (1.0 / pow(t0 - t1, 5.0)*((t0*t0*t0*t0*t0)*v1*2.0 - (t1*t1*t1*t1*t1)*v0*2.0 + a0*t0*(t1*t1*t1*t1*t1)*2.0 - a1*(t0*t0*t0*t0*t0)*t1*2.0 + t0*(t1*t1*t1*t1)*v0*1.0E+1 - (t0*t0*t0*t0)*t1*v1*1.0E+1 - a0*(t0*t0)*(t1*t1*t1*t1) - a0*(t0*t0*t0)*(t1*t1*t1)*4.0 + a0*(t0*t0*t0*t0)*(t1*t1)*3.0 - a1*(t0*t0)*(t1*t1*t1*t1)*3.0 + a1*(t0*t0*t0)*(t1*t1*t1)*4.0 + a1*(t0*t0*t0*t0)*(t1*t1) + (t0*t0)*(t1*t1*t1)*v0*1.6E+1 - (t0*t0*t0)*(t1*t1)*v0*2.4E+1 + (t0*t0)*(t1*t1*t1)*v1*2.4E+1 - (t0*t0*t0)*(t1*t1)*v1*1.6E+1 + (t0*t0)*(t1*t1)*x0*6.0E+1 - (t0*t0)*(t1*t1)*x1*6.0E+1)) / 2.0;
+	b_spline[2] = 1.0 / pow(t0 - t1, 5.0)*(a0*(t1*t1*t1*t1*t1) - a1*(t0*t0*t0*t0*t0) + a0*t0*(t1*t1*t1*t1)*4.0 + a0*(t0*t0*t0*t0)*t1*3.0 - a1*t0*(t1*t1*t1*t1)*3.0 - a1*(t0*t0*t0*t0)*t1*4.0 + t0*(t1*t1*t1)*v0*3.6E+1 - (t0*t0*t0)*t1*v0*2.4E+1 + t0*(t1*t1*t1)*v1*2.4E+1 - (t0*t0*t0)*t1*v1*3.6E+1 + t0*(t1*t1)*x0*6.0E+1 + (t0*t0)*t1*x0*6.0E+1 - t0*(t1*t1)*x1*6.0E+1 - (t0*t0)*t1*x1*6.0E+1 - a0*(t0*t0)*(t1*t1*t1)*8.0 + a1*(t0*t0*t0)*(t1*t1)*8.0 - (t0*t0)*(t1*t1)*v0*1.2E+1 + (t0*t0)*(t1*t1)*v1*1.2E+1)*(-1.0 / 2.0);
+	b_spline[3] = (1.0 / pow(t0 - t1, 5.0)*(a0*(t0*t0*t0*t0) + a0*(t1*t1*t1*t1)*3.0 - a1*(t0*t0*t0*t0)*3.0 - a1*(t1*t1*t1*t1) - (t0*t0*t0)*v0*8.0 - (t0*t0*t0)*v1*1.2E+1 + (t1*t1*t1)*v0*1.2E+1 + (t1*t1*t1)*v1*8.0 + (t0*t0)*x0*2.0E+1 - (t0*t0)*x1*2.0E+1 + (t1*t1)*x0*2.0E+1 - (t1*t1)*x1*2.0E+1 + a0*(t0*t0*t0)*t1*4.0 - a1*t0*(t1*t1*t1)*4.0 + t0*(t1*t1)*v0*2.8E+1 - (t0*t0)*t1*v0*3.2E+1 + t0*(t1*t1)*v1*3.2E+1 - (t0*t0)*t1*v1*2.8E+1 - a0*(t0*t0)*(t1*t1)*8.0 + a1*(t0*t0)*(t1*t1)*8.0 + t0*t1*x0*8.0E+1 - t0*t1*x1*8.0E+1)) / 2.0;
+	b_spline[4] = 1.0 / pow(t0 - t1, 5.0)*(t0*x0*3.0E+1 - t0*x1*3.0E+1 + t1*x0*3.0E+1 - t1*x1*3.0E+1 + a0*(t0*t0*t0)*2.0 + a0*(t1*t1*t1)*3.0 - a1*(t0*t0*t0)*3.0 - a1*(t1*t1*t1)*2.0 - (t0*t0)*v0*1.4E+1 - (t0*t0)*v1*1.6E+1 + (t1*t1)*v0*1.6E+1 + (t1*t1)*v1*1.4E+1 - a0*t0*(t1*t1)*4.0 - a0*(t0*t0)*t1 + a1*t0*(t1*t1) + a1*(t0*t0)*t1*4.0 - t0*t1*v0*2.0 + t0*t1*v1*2.0)*(-1.0 / 2.0);
+	b_spline[5] = (1.0 / pow(t0 - t1, 5.0)*(x0*1.2E+1 - x1*1.2E+1 - t0*v0*6.0 - t0*v1*6.0 + t1*v0*6.0 + t1*v1*6.0 + a0*(t0*t0) + a0*(t1*t1) - a1*(t0*t0) - a1*(t1*t1) - a0*t0*t1*2.0 + a1*t0*t1*2.0)) / 2.0;
+	int k0 = (int)floor(t0 / control_t + 1e-8);
+	int k1 = (int)floor(t1 / control_t + 1e-8);
+	int k = 0;
+	for (int i = k0; i < k1; i++) {
+		pos_out[k] = b_spline[0] + b_spline[1] * i * control_t + b_spline[2] * i * control_t * i * control_t + b_spline[3] * i * control_t * i * control_t * i * control_t + b_spline[4] * i * control_t * i * control_t * i * control_t * i * control_t + b_spline[5] * i * control_t * i * control_t * i * control_t * i * control_t * i * control_t;
+		vel_out[k] = b_spline[1] + 2.0 * b_spline[2] * i * control_t + 3.0 * b_spline[3] * i * control_t * i * control_t + 4.0 * b_spline[4] * i * control_t * i * control_t * i * control_t + 5.0 * b_spline[5] * i * control_t * i * control_t * i * control_t * i * control_t;
+		acc_out[k] = 2.0 * b_spline[2] + 6.0 * b_spline[3] * i * control_t + 12.0 * b_spline[4] * i * control_t * i * control_t + 20.0 * b_spline[5] * i * control_t * i * control_t * i * control_t;
+		k++;
+	}
+	for (int i = k1; i < maxProgN + k0; i++) {
+		pos_out[k] = pos_out[k1 - k0 - 1];
+		vel_out[k] = acc_out[k] = 0.0;
+		k++;
+	}
+}
+/** Online spline: 
+* InputVal: dTimeNow (from the begining of dPosIn)
+* OutputVal: &DataOut
+*/
+void fnvOnLineSpline(double * dPosIn, double * dVelIn, double * dAccIn, double dTimeNow, double dPosCmd, double dTimeCmd, int nKTot, double dControlT) {
+	int nKNow = (int)floor(dTimeNow / dControlT), nKCmd = (int)floor(dTimeCmd / dControlT), maxProgN = nKTot - nKNow;
+	double x0 = dPosIn[nKNow], v0 = dVelIn[nKNow], a0 = dAccIn[nKNow];
+	fnvFifthSplineOutputPVA(dPosIn + nKNow, dVelIn + nKNow, dAccIn + nKNow, maxProgN, x0, v0, a0, dTimeNow, dPosCmd, 0.0, 0.0, dTimeCmd, dControlT);
+}
+
+
