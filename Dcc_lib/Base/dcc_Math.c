@@ -60,9 +60,17 @@ void fnvObtainTransMat3(double * dptTransMat, char cAxis, double dQ, double dPos
 	}
 }
 
-void fnvSO2Eul(double * dRotIn, double * dRulOut) {
+void fnvSO32Eul(double * dRotIn /*X-Y-Z*/, double * dRulOut /*pit-rol-yaw*/) {
     int nRowNum = 3;
     *dRulOut = atan2(*(dRotIn + 2 * nRowNum + 1), *(dRotIn + 2 * nRowNum + 2));
     *(dRulOut + 1) = atan2(-*(dRotIn + 2 * nRowNum), sqrt(*(dRotIn + 2 * nRowNum + 1) * *(dRotIn + 2 * nRowNum + 1) + *(dRotIn + 2 * nRowNum + 2) * *(dRotIn + 2 * nRowNum + 2)));
     *(dRulOut + 2) = atan2(*(dRotIn + 1 * nRowNum), *dRotIn);
+}
+
+void fnvSO32Qua(double * dRotIn /*X-Y-Z*/, double * dQuaOut) {
+    int nRowNum = 3;
+    *dQuaOut = 0.5 * sqrt(1.0 + *dRotIn + *(dRotIn + 1 * nRowNum + 1) + *(dRotIn + 2 * nRowNum + 2));
+    *(dQuaOut + 1) = 0.25 * (*(dRotIn + 2 * nRowNum + 1) - *(dRotIn + 1 * nRowNum + 2)) / *dQuaOut;
+    *(dQuaOut + 2) = 0.25 * (*(dRotIn + 2) - *(dRotIn + 2 * nRowNum)) / *dQuaOut;
+    *(dQuaOut + 3) = 0.25 * (*(dRotIn + 1 * nRowNum) - *(dRotIn + 1)) / *dQuaOut;
 }
