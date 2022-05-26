@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.0)
+project(Test_DccLib)
+
+include_directories()
+link_directories()
+
+aux_source_directory("Dcc_lib" AllSource)
+aux_source_directory("Dcc_lib/Base" AllSource)
+
+add_executable(Process_TestDccLib Test.c ${AllSource})
+
+target_compile_definitions(Process_TestDccLib PUBLIC -DMAX_EXT_API_CONNECTIONS=255 -DNON_MATLAB_PARSING -DDO_NOT_USE_SHARED_MEMORY -D_CRT_SECURE_NO_WARNINGS)
+target_compile_options(Process_TestDccLib PUBLIC /nologo /Ox /O2 /Ot /W3 /WX- /Gm- /EHsc /MD /GS- /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Gd /openmp- /Gd /analyze- /errorReport:prompt /openmp- /EHsc )
+target_link_libraries(Process_TestDccLib PUBLIC)

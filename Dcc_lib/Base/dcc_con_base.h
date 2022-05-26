@@ -201,7 +201,6 @@ double fndFilterTimeLag(double filtered_in, double data_in, double control_t, do
 void fnvFifthSpline(double *pos_out, int maxProgN, double x0, double v0, double a0, double t0, double x1, double v1, double a1, double t1, double control_t, char mode_flag);
 void fnvDouFourthSpline(double *pos_out, int maxProgN, double x0, double v0, double a0, double t0, double x1, double t1, double x2, double v2, double a2, double t2, double control_t, char mode_flag);
 void fnvEzSpline(double *pos_out, int maxProgN, double t0_in, double t1_in, double x1_in, double control_t);
-void fnvObtainTransMat3(double * dptTransMat, char cAxis, double dQ, double dPos[3]);
 void fnvTic();
 double fnvToc(int nDispTimeFlag);
 int fnnSlowDown(double * dptDataIn, int nDataLen, int nSlowTimes, double * dptDataOut);

@@ -1,0 +1,3 @@
+@cd build
+nmake
+@cd ..

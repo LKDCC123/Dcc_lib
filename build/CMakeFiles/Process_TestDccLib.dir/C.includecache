@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/L.B/GitHUB/Dcc_lib/Dcc_lib/Base/dcc_Ik.h
+
+D:/L.B/GitHUB/Dcc_lib/Dcc_lib/Base/dcc_Mat.h
+
+D:/L.B/GitHUB/Dcc_lib/Dcc_lib/Base/dcc_con_base.h
+math.h
+-
+dcc_Mat.h
+D:/L.B/GitHUB/Dcc_lib/Dcc_lib/Base/dcc_Mat.h
+
+D:/L.B/GitHUB/Dcc_lib/Dcc_lib/dcc_IkLegs.h
+Base/dcc_Ik.h
+D:/L.B/GitHUB/Dcc_lib/Dcc_lib/Base/dcc_Ik.h
+
+D:/L.B/GitHUB/Dcc_lib/Test.c
+stdio.h
+-
+Dcc_lib/dcc_IkLegs.h
+D:/L.B/GitHUB/Dcc_lib/Dcc_lib/dcc_IkLegs.h
+Dcc_lib/Base/dcc_con_base.h
+D:/L.B/GitHUB/Dcc_lib/Dcc_lib/Base/dcc_con_base.h
+Dcc_lib/Base/dcc_Mat.h
+D:/L.B/GitHUB/Dcc_lib/Dcc_lib/Base/dcc_Mat.h
+
