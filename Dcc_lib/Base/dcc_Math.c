@@ -63,6 +63,6 @@ void fnvObtainTransMat3(double * dptTransMat, char cAxis, double dQ, double dPos
 void fnvSO2Eul(double * dRotIn, double * dRulOut) {
     int nRowNum = 3;
     *dRulOut = atan2(*(dRotIn + 2 * nRowNum + 1), *(dRotIn + 2 * nRowNum + 2));
-    *dRulOut = atan2(-*(dRotIn + 2 * nRowNum), sqrt(*(dRotIn + 2 * nRowNum + 1) * *(dRotIn + 2 * nRowNum + 1) + *(dRotIn + 2 * nRowNum + 2) * *(dRotIn + 2 * nRowNum + 2)));
-    *dRulOut = stan2(*(dRotIn + 1 * nRowNum), *dRotIn);
+    *(dRulOut + 1) = atan2(-*(dRotIn + 2 * nRowNum), sqrt(*(dRotIn + 2 * nRowNum + 1) * *(dRotIn + 2 * nRowNum + 1) + *(dRotIn + 2 * nRowNum + 2) * *(dRotIn + 2 * nRowNum + 2)));
+    *(dRulOut + 2) = atan2(*(dRotIn + 1 * nRowNum), *dRotIn);
 }
