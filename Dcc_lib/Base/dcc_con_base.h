@@ -102,6 +102,7 @@ typedef struct {
 	dccSpacial Base;
 	dccFootFT FootFT;
 	dccAnkleTwoFrame Ankle;
+	dccZMP CoM;
 	int SupLeg; // dou 0, rsup 1, lsup 2, fly 3
 }dccRobotState;
 
@@ -192,6 +193,7 @@ typedef struct {
 double fndLimit(double dInputData, double dLimit[2]);
 double fndAddLimit(double dInputData, double dAddedData, double * dSurPassedVal, double dLimit[2]); // rec dcc
 double fndThreshold(double dInVal, double dThreshold[2]);
+double fndThresholdJump(double dInVal, double dThreshold[2]);
 void fnvInitInteg(IntegValLimit *strInputData);
 IntegValLimit fnstrIntegLimit(IntegValLimit strOldData, double dAcc, double dLimits[6], double dControlT);
 void fnvJerkLimit(double *dPosIn, double *dVelIn, double *dAccIn, double dJerk, double dLimits[6], double dControlT);

@@ -50,6 +50,13 @@ double fndThreshold(double dInVal, double dThreshold[2]) {
 	else dOutVal = 0.0;
 	return dOutVal;
 }
+double fndThresholdJump(double dInVal, double dThreshold[2]) {
+	double dOutVal;
+	if (dInVal >= dThreshold[1]) dOutVal = dInVal;
+	else if (dInVal <= dThreshold[0]) dOutVal = dInVal;
+	else dOutVal = 0.0;
+	return dOutVal;
+}
 void fnvInitInteg(IntegValLimit *strInputData) {
 	strInputData->p = 0.0;
 	strInputData->dp = 0.0;
