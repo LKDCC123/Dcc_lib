@@ -4,9 +4,9 @@
 #include<stdio.h>
 
 // for timer ================================================
-LARGE_INTEGER nFreq;//LARGE_INTEGER��64λϵͳ����LONGLONG����32λϵͳ���Ǹߵ�����32λ��LONG����windows.h��ͨ��Ԥ�����������
-LARGE_INTEGER nBeginTime;//��¼��ʼʱ�ļ�������ֵ
-LARGE_INTEGER nEndTime;//��¼ֹͣʱ�ļ�������ֵ
+LARGE_INTEGER nFreq;
+LARGE_INTEGER nBeginTime;
+LARGE_INTEGER nEndTime;
 double time_start, time_end, time_;
 double j_timer = 10.0;
 // for timer ================================================
