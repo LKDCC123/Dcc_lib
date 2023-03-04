@@ -376,6 +376,13 @@ void fnvSO32Qua(double * dRotIn /*X-Y-Z*/, double * dQuaOut) {
     *(dQuaOut + 3) = 0.25 * (*(dRotIn + 1 * nRowNum) - *(dRotIn + 1)) / *dQuaOut;
 }
 
+void fnvLinearC2D(double * dAc, double * dBc, double * dAd, double *dBd, double dT, int nDim, int nInputNum) {
+	for(int i = 0; i < nDim; i++) {
+		for(int j = 0; j < nDim; j++) *(dAd + i * nDim + j) = dT * *(dAc + i * nDim + j) + (double)(i == j);
+		for(int k = 0; k < nInputNum; k++) *(dBd + i * nInputNum + k) = dT * *(dBc + i * nInputNum + k);
+	}
+}
+
 _D_BASE_END
 
 #endif
