@@ -1,14 +1,33 @@
 cmake_minimum_required(VERSION 3.0)
-project(Test_DccLib)
+project(DBase)
 
-include_directories()
+message("${CMAKE_PREFIX_PATH}")
+# find_package()
+
+include_directories(
+    ${CMAKE_SOURCE_DIR}/include
+)
+
 link_directories()
 
-aux_source_directory("Dcc_lib" AllSource)
-aux_source_directory("Dcc_lib/Base" AllSource)
+aux_source_directory(${CMAKE_SOURCE_DIR} SRC_TEST)
 
-add_executable(Process_TestDccLib Test.c ${AllSource})
+# add_executable(Test
+#     ${SRC_TEST}
+# )
 
-target_compile_definitions(Process_TestDccLib PUBLIC -DMAX_EXT_API_CONNECTIONS=255 -DNON_MATLAB_PARSING -DDO_NOT_USE_SHARED_MEMORY -D_CRT_SECURE_NO_WARNINGS)
-target_compile_options(Process_TestDccLib PUBLIC /nologo /Ox /O2 /Ot /W3 /WX- /Gm- /EHsc /MD /GS- /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Gd /openmp- /Gd /analyze- /errorReport:prompt /openmp- /EHsc )
-target_link_libraries(Process_TestDccLib PUBLIC)
+# target_compile_definitions(Test PUBLIC
+#     _CRT_SECURE_NO_WARNINGS
+#     NDEBUG
+#     UNICODE
+#     CONSOLE
+# )
+
+# target_compile_options(Test PUBLIC
+#     /nologo
+# )
+
+# target_link_options(Test PUBLIC)
+
+# if install
+include(config.cmake)

@@ -1,0 +1,31 @@
+# - Config file for the @PKG_NAME@ package
+# It defines the following variables
+#  @PKG_NAME@_INCLUDE_DIR - include directories for @PKG_NAME@
+#  @PKG_NAME@_SRC_DIR     - src     directories for @PKG_NAME@
+#  @PKG_NAME@_LIB_DIR     - lib     directories for @PKG_NAME@
+ 
+# Compute paths
+if(@@PKG_NAME@_INCLUDE_ON@)
+    set(@PKG_NAME@_INCLUDE_DIR "@@PKG_NAME@_include_dirs@")
+endif()
+if(@@PKG_NAME@_LIB_ON@)
+    set(@PKG_NAME@_LIB_DIR     "@@PKG_NAME@_lib_dirs@"    )
+endif()
+if(@@PKG_NAME@_SRC_ON@)
+    set(@PKG_NAME@_SRC_DIR     "@@PKG_NAME@_src_dirs@"    )
+endif()
+
+# set paths
+message("-- [@PKG_NAME@]: Package found!")
+if(DEFINED @PKG_NAME@_INCLUDE_DIR)
+    include_directories(${@PKG_NAME@_INCLUDE_DIR})
+    message("-- [@PKG_NAME@]: Include ${@PKG_NAME@_INCLUDE_DIR}")
+endif()
+if(DEFINED @PKG_NAME@_LIB_DIR)
+    link_directories(${@PKG_NAME@_LIB_DIR})
+    message("-- [@PKG_NAME@]: Link ${@PKG_NAME@_LIB_DIR}")
+endif()
+if(DEFINED @PKG_NAME@_SRC_DIR)
+    aux_source_directory(${@PKG_NAME@_SRC_DIR} @PKG_NAME@_FILES)
+    message("-- [@PKG_NAME@]: Can use @PKG_NAME@_SRC_FILES")
+endif()
