@@ -11,10 +11,10 @@
 
 #define __PI 3.1415926
 #ifndef __R2D
-#define __R2D(a) a * 180.0 / __PI
+#define __R2D(a) ((a) * (180.0 / __PI))
 #endif
 #ifndef __D2R
-#define __D2R(a) a * __PI / 180.0
+#define __D2R(a) ((a) * (__PI / 180.0))
 #endif
 #ifndef __KLeftToNow
 #define __KLeftToNow 100 // reserved num of k to now when circuling
