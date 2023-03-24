@@ -46,6 +46,42 @@ void fnvMatDisp(char *cptName, const double *dInMat, int nRow, int nColumn)
 	printf("\n");
 }
 
+void fnvMatCopy(const double *dInMat, int nColumnIn, int nRowOut, int nColumnOut, double *dOutMat)
+{
+	for (int i = 0; i < nRowOut; i++) {
+		for (int j = 0; j < nColumnOut; j++) {
+			*(dOutMat + i * nColumnOut + j) = *(dInMat + i * nColumnIn + j);
+		}
+	}
+}
+
+void fnvDiag(const double *dInVec, int nOrder, double *dOutMat)
+{
+	for (int i = 0; i < nOrder; i++) {
+		for (int j = 0; j < nOrder; j++) {
+			if (i == j) {
+				*(dOutMat + i * nOrder + j) = *(dInVec + i);
+			}
+			else {
+				*(dOutMat + i * nOrder + j) = 0.0;
+			}
+		}
+	}
+}
+
+void fnvEye(double dGain, int nOrder, double *dOutMat)
+{
+	for (int i = 0; i < nOrder; i++) {
+		for (int j = 0; j < nOrder; j++) {
+			if (i == j) {
+				*(dOutMat + i * nOrder + j) = dGain;
+			}
+			else {
+				*(dOutMat + i * nOrder + j) = 0.0;
+			}
+		}
+	}
+}
 
 void fnvMatTrans(const double *dInMat, int nRow, int nColumn, double *dOutMat)
 {
@@ -263,43 +299,6 @@ void fnvMatInv(const double *dInMat, int nOrder, double *dOutMat)
 	fnvMatAdj(dInMat, nOrder, dOutMat);
 	fnvMatMet(dOutMat, &dTemp[0][0], nOrder, nOrder, 0, '*', dOutMat);
 #endif
-}
-
-void fnvMatCopy(const double *dInMat, int nColumnIn, int nRowOut, int nColumnOut, double *dOutMat)
-{
-	for (int i = 0; i < nRowOut; i++) {
-		for (int j = 0; j < nColumnOut; j++) {
-			*(dOutMat + i * nColumnOut + j) = *(dInMat + i * nColumnIn + j);
-		}
-	}
-}
-
-void fnvDiag(const double *dInVec, int nOrder, double *dOutMat)
-{
-	for (int i = 0; i < nOrder; i++) {
-		for (int j = 0; j < nOrder; j++) {
-			if (i == j) {
-				*(dOutMat + i * nOrder + j) = *(dInVec + i);
-			}
-			else {
-				*(dOutMat + i * nOrder + j) = 0.0;
-			}
-		}
-	}
-}
-
-void fnvEye(double dGain, int nOrder, double *dOutMat)
-{
-	for (int i = 0; i < nOrder; i++) {
-		for (int j = 0; j < nOrder; j++) {
-			if (i == j) {
-				*(dOutMat + i * nOrder + j) = dGain;
-			}
-			else {
-				*(dOutMat + i * nOrder + j) = 0.0;
-			}
-		}
-	}
 }
 
 /** Obtain transition matrix: 
