@@ -22,19 +22,19 @@ warning: You can't use input as output
 #define USE_INV_NEW // affect the speed of Inv			  | 0   | 0   | 1   | 1   |
 					// time cost of Inv					  | 500 | 12  | 1   | 1   |                  
 
-const double * fndptCreatMat(int nRow, int nColumn) {
+inline const double * fndptCreatMat(int nRow, int nColumn) {
 	return (const double *)malloc(sizeof(double) * nRow * nColumn);
 }
 
-double * fndptCreatVec(int nRow) {
+inline double * fndptCreatVec(int nRow) {
 	return (double *)malloc(sizeof(double) * nRow);
 }
 
-void fnvValuateMat(int nRow, int nColumn, double *dIntMat, double *dptValin) {
+inline void fnvValuateMat(int nRow, int nColumn, double *dIntMat, double *dptValin) {
 	for (int i = 0; i < nRow; i++) for (int j = 0; j < nColumn; j++) *(dIntMat + i * nRow + j) = *(dptValin + i * nRow + j);
 }
 
-void fnvMatDisp(char *cptName, const double *dInMat, int nRow, int nColumn) 
+inline void fnvMatDisp(char *cptName, const double *dInMat, int nRow, int nColumn) 
 {
 	printf("%s = \n", cptName);
 	for (int i = 0; i < nRow; i++) {
@@ -46,7 +46,7 @@ void fnvMatDisp(char *cptName, const double *dInMat, int nRow, int nColumn)
 	printf("\n");
 }
 
-void fnvMatCopy(const double *dInMat, int nColumnIn, int nRowOut, int nColumnOut, double *dOutMat)
+inline void fnvMatCopy(const double *dInMat, int nColumnIn, int nRowOut, int nColumnOut, double *dOutMat)
 {
 	for (int i = 0; i < nRowOut; i++) {
 		for (int j = 0; j < nColumnOut; j++) {
@@ -55,7 +55,7 @@ void fnvMatCopy(const double *dInMat, int nColumnIn, int nRowOut, int nColumnOut
 	}
 }
 
-void fnvDiag(const double *dInVec, int nOrder, double *dOutMat)
+inline void fnvDiag(const double *dInVec, int nOrder, double *dOutMat)
 {
 	for (int i = 0; i < nOrder; i++) {
 		for (int j = 0; j < nOrder; j++) {
@@ -69,7 +69,7 @@ void fnvDiag(const double *dInVec, int nOrder, double *dOutMat)
 	}
 }
 
-void fnvEye(double dGain, int nOrder, double *dOutMat)
+inline void fnvEye(double dGain, int nOrder, double *dOutMat)
 {
 	for (int i = 0; i < nOrder; i++) {
 		for (int j = 0; j < nOrder; j++) {
@@ -83,7 +83,7 @@ void fnvEye(double dGain, int nOrder, double *dOutMat)
 	}
 }
 
-void fnvMatTrans(const double *dInMat, int nRow, int nColumn, double *dOutMat)
+inline void fnvMatTrans(const double *dInMat, int nRow, int nColumn, double *dOutMat)
 {
 	for (int i = 0; i < nRow; i++) {
 		for (int j = 0; j < nColumn; j++) {
@@ -92,7 +92,7 @@ void fnvMatTrans(const double *dInMat, int nRow, int nColumn, double *dOutMat)
 	}
 }
 
-void fnvMatMet(const double *dInMat1, const double *dInMat2, int nRow1, int nColumn1, int nColumn2, const char cMethod, double *dOutMat)
+inline void fnvMatMet(const double *dInMat1, const double *dInMat2, int nRow1, int nColumn1, int nColumn2, const char cMethod, double *dOutMat)
 {
 	double dVal_temp;
 	if (cMethod == '+') { // add
@@ -161,7 +161,7 @@ void fnvMatMet(const double *dInMat1, const double *dInMat2, int nRow1, int nCol
 	}
 }
 
-double fndMatDet(const double *dInMat, int nOrder)
+inline double fndMatDet(const double *dInMat, int nOrder)
 {
 	double Det = 0.0;
 #ifdef USE_DET_NEW
@@ -219,7 +219,7 @@ double fndMatDet(const double *dInMat, int nOrder)
 	return Det;
 }
 
-void fnvMatAdj(const double *dInMat, int nOrder, double *dOutMat)
+inline void fnvMatAdj(const double *dInMat, int nOrder, double *dOutMat)
 {
 	int i_exp, j_exp, i, j;
 	double *dptMaSmaller = (double *)malloc(sizeof(double) * (nOrder - 1) * (nOrder - 1));
@@ -247,7 +247,7 @@ void fnvMatAdj(const double *dInMat, int nOrder, double *dOutMat)
 	free(dptMaAdj);
 }
 
-void fnvMatInv(const double *dInMat, int nOrder, double *dOutMat)
+inline void fnvMatInv(const double *dInMat, int nOrder, double *dOutMat)
 {
 #ifdef USE_INV_NEW
 	int i, j, k, m;
@@ -303,7 +303,7 @@ void fnvMatInv(const double *dInMat, int nOrder, double *dOutMat)
 
 /** Obtain transition matrix: 
 */
-void fnvObtainTransMat3(double * dptTransMat, char cAxis, double dQ, double dPos[3]) {
+inline void fnvObtainTransMat3(double * dptTransMat, char cAxis, double dQ, double dPos[3]) {
 	double dTransMat[4][4] = { 0.0 };
 	if (cAxis == 'x') {
 		double dTransMatTemp[4][4] = {
@@ -360,14 +360,14 @@ void fnvObtainTransMat3(double * dptTransMat, char cAxis, double dQ, double dPos
 	}
 }
 
-void fnvSO32Eul(double * dRotIn /*X-Y-Z*/, double * dRulOut /*pit-rol-yaw*/) {
+inline void fnvSO32Eul(double * dRotIn /*X-Y-Z*/, double * dRulOut /*pit-rol-yaw*/) {
     int nRowNum = 3;
     *dRulOut = atan2(*(dRotIn + 2 * nRowNum + 1), *(dRotIn + 2 * nRowNum + 2));
     *(dRulOut + 1) = atan2(-*(dRotIn + 2 * nRowNum), sqrt(*(dRotIn + 2 * nRowNum + 1) * *(dRotIn + 2 * nRowNum + 1) + *(dRotIn + 2 * nRowNum + 2) * *(dRotIn + 2 * nRowNum + 2)));
     *(dRulOut + 2) = atan2(*(dRotIn + 1 * nRowNum), *dRotIn);
 }
 
-void fnvSO32Qua(double * dRotIn /*X-Y-Z*/, double * dQuaOut) {
+inline void fnvSO32Qua(double * dRotIn /*X-Y-Z*/, double * dQuaOut) {
     int nRowNum = 3;
     *dQuaOut = 0.5 * sqrt(1.0 + *dRotIn + *(dRotIn + 1 * nRowNum + 1) + *(dRotIn + 2 * nRowNum + 2));
     *(dQuaOut + 1) = 0.25 * (*(dRotIn + 2 * nRowNum + 1) - *(dRotIn + 1 * nRowNum + 2)) / *dQuaOut;
@@ -375,7 +375,7 @@ void fnvSO32Qua(double * dRotIn /*X-Y-Z*/, double * dQuaOut) {
     *(dQuaOut + 3) = 0.25 * (*(dRotIn + 1 * nRowNum) - *(dRotIn + 1)) / *dQuaOut;
 }
 
-void fnvLinearC2D(double * dAc, double * dBc, double * dAd, double *dBd, double dT, int nDim, int nInputNum) {
+inline void fnvLinearC2D(double * dAc, double * dBc, double * dAd, double *dBd, double dT, int nDim, int nInputNum) {
 	for(int i = 0; i < nDim; i++) {
 		for(int j = 0; j < nDim; j++) *(dAd + i * nDim + j) = dT * *(dAc + i * nDim + j) + (double)(i == j);
 		for(int k = 0; k < nInputNum; k++) *(dBd + i * nInputNum + k) = dT * *(dBc + i * nInputNum + k);

@@ -1,5 +1,6 @@
 // basic tools based on dcc_con_base.c
 // 20230303 dcc <3120195094@bit.edu.cn>
+#pragma once
 #ifndef DBASE_HPP
 #define DBASE_HPP
 #include "BaseHeaders.h"
@@ -8,11 +9,11 @@
 _D_BASE_BEGIN
 
 // for timer ================================================
-LARGE_INTEGER nFreq;
-LARGE_INTEGER nBeginTime;
-LARGE_INTEGER nEndTime;
-double time_start, time_end, time_;
-double j_timer = 10.0;
+static LARGE_INTEGER nFreq;
+static LARGE_INTEGER nBeginTime;
+static LARGE_INTEGER nEndTime;
+static double time_start, time_end, time_;
+static double j_timer = 10.0;
 // for timer ================================================
 
 /**
@@ -22,7 +23,7 @@ double j_timer = 10.0;
  * @param dLimit        INPUT
  * @return double       OUTPUT
  */
-double fndLimit(double dInputData, double dLimit[2]) {
+inline double fndLimit(double dInputData, double dLimit[2]) {
 	double dOutputData;
 	if (dLimit[0] == dLimit[1]) {
 		return dInputData;
@@ -43,7 +44,7 @@ double fndLimit(double dInputData, double dLimit[2]) {
  * @param dLimit        INPUT
  * @return double       OUTPUT limited value
  */
-double fndAddLimit(double dInputData, double dAddedData, double * dSurPassedVal, double dLimit[2]) {
+inline double fndAddLimit(double dInputData, double dAddedData, double * dSurPassedVal, double dLimit[2]) {
 	double dOutputData;
 	if (dInputData + dAddedData >= dLimit[1]) {
 		dOutputData = dLimit[1] - dAddedData;
@@ -55,14 +56,14 @@ double fndAddLimit(double dInputData, double dAddedData, double * dSurPassedVal,
 	if(dSurPassedVal != NULL) *dSurPassedVal = dInputData - dOutputData;
 	return dOutputData;
 }
-double fndThreshold(double dInVal, double dThreshold[2]) {
+inline double fndThreshold(double dInVal, double dThreshold[2]) {
 	double dOutVal;
 	if (dInVal >= dThreshold[1]) dOutVal = dInVal - dThreshold[1];
 	else if (dInVal <= dThreshold[0]) dOutVal = dInVal - dThreshold[0];
 	else dOutVal = 0.0;
 	return dOutVal;
 }
-double fndThresholdJump(double dInVal, double dThreshold[2]) {
+inline double fndThresholdJump(double dInVal, double dThreshold[2]) {
 	double dOutVal;
 	if (dInVal >= dThreshold[1]) dOutVal = dInVal;
 	else if (dInVal <= dThreshold[0]) dOutVal = dInVal;
@@ -80,7 +81,7 @@ double fndThresholdJump(double dInVal, double dThreshold[2]) {
  * @param dLimits   INPUT [nega position limit, posi position limit, nega velocity limit, posi velocity limit, nega acceleration limit, posi acceleration limit]
  * @param dControlT INPUT
  */
-void fnvIntergJerkLimit(double *dPosIn, double *dVelIn, double *dAccIn, double dJerk, double dLimits[6], double dControlT) {
+inline void fnvIntergJerkLimit(double *dPosIn, double *dVelIn, double *dAccIn, double dJerk, double dLimits[6], double dControlT) {
 	double dPositionLimit[2];
 	double dVelocityLimit[2];
 	double dAccelerateLimit[2];
@@ -112,7 +113,7 @@ void fnvIntergJerkLimit(double *dPosIn, double *dVelIn, double *dAccIn, double d
  * @param dLimits   INPUT [nega position limit, posi position limit, nega velocity limit, posi velocity limit, nega acceleration limit, posi acceleration limit]
  * @param dControlT INPUT
  */
-void fnvIntegAccLimit(double *dPosIn, double *dVelIn, double dAcc, double dLimits[6], double dControlT) {
+inline void fnvIntegAccLimit(double *dPosIn, double *dVelIn, double dAcc, double dLimits[6], double dControlT) {
 	double dPositionLimit[2];
 	double dVelocityLimit[2];
 	double dAccelerateLimit[2];
@@ -140,7 +141,7 @@ void fnvIntegAccLimit(double *dPosIn, double *dVelIn, double dAcc, double dLimit
  * @param dLimits   INPUT [nega position limit, posi position limit, nega velocity limit, posi velocity limit]
  * @param dControlT INPUT
  */
-void fnvIntergVeloLimit(double *dPosIn, double dVel, double dLimits[4], double dControlT) {
+inline void fnvIntergVeloLimit(double *dPosIn, double dVel, double dLimits[4], double dControlT) {
 	double dPositionLimit[2];
 	double dVelocityLimit[2];
 	double dPosOld = *dPosIn;
@@ -163,7 +164,7 @@ void fnvIntergVeloLimit(double *dPosIn, double dVel, double dLimits[4], double d
  * @param Lag_T         INPUT
  * @return double       OUTPUT filtered data of current circle
  */
-double fndFilterTimeLag(double filtered_in, double data_in, double control_t, double Lag_T)
+inline double fndFilterTimeLag(double filtered_in, double data_in, double control_t, double Lag_T)
 {
 	double filtered_out;
 	filtered_out = (control_t * data_in + Lag_T * filtered_in) / (control_t + Lag_T);
@@ -186,7 +187,7 @@ double fndFilterTimeLag(double filtered_in, double data_in, double control_t, do
  * @param control_t INPUT
  * @param mode_flag INPUT 'T' traditional: start from k = 0; 'N' novel: start from k = k0 calculated by t0
  */
-void fnvFifthSpline(double *pos_out, int maxProgN, double x0, double v0, double a0, double t0, double x1, double v1, double a1, double t1, double control_t, char mode_flag)
+inline void fnvFifthSpline(double *pos_out, int maxProgN, double x0, double v0, double a0, double t0, double x1, double v1, double a1, double t1, double control_t, char mode_flag)
 {
 	double b_spline[6] = { 0 };
 	b_spline[0] = (1.0 / pow(t0 - t1, 5.0)*((t0*t0*t0*t0*t0)*x1*2.0 - (t1*t1*t1*t1*t1)*x0*2.0 + t0*(t1*t1*t1*t1*t1)*v0*2.0 - (t0*t0*t0*t0*t0)*t1*v1*2.0 + t0*(t1*t1*t1*t1)*x0*1.0E+1 - (t0*t0*t0*t0)*t1*x1*1.0E+1 - a0*(t0*t0)*(t1*t1*t1*t1*t1) + a0*(t0*t0*t0)*(t1*t1*t1*t1)*2.0 - a0*(t0*t0*t0*t0)*(t1*t1*t1) + a1*(t0*t0*t0)*(t1*t1*t1*t1) - a1*(t0*t0*t0*t0)*(t1*t1*t1)*2.0 + a1*(t0*t0*t0*t0*t0)*(t1*t1) - (t0*t0)*(t1*t1*t1*t1)*v0*1.0E+1 + (t0*t0*t0)*(t1*t1*t1)*v0*8.0 - (t0*t0*t0)*(t1*t1*t1)*v1*8.0 + (t0*t0*t0*t0)*(t1*t1)*v1*1.0E+1 - (t0*t0)*(t1*t1*t1)*x0*2.0E+1 + (t0*t0*t0)*(t1*t1)*x1*2.0E+1)) / 2.0;
@@ -242,7 +243,7 @@ void fnvFifthSpline(double *pos_out, int maxProgN, double x0, double v0, double 
  * @param control_t INPUT
  * @param mode_flag INPUT 'T' traditional: start from k = 0; 'N' novel: start from k = k0 calculated by t0
  */
-void fnvDouFourthSpline(double *pos_out, int maxProgN, double x0, double v0, double a0, double t0, double x1, double t1, double x2, double v2, double a2, double t2, double control_t, char mode_flag)
+inline void fnvDouFourthSpline(double *pos_out, int maxProgN, double x0, double v0, double a0, double t0, double x1, double t1, double x2, double v2, double a2, double t2, double control_t, char mode_flag)
 {
 	double b_spline[10] = { 0 };
 	double v1 = 0.0;
@@ -303,7 +304,7 @@ void fnvDouFourthSpline(double *pos_out, int maxProgN, double x0, double v0, dou
  * @param x1_in     INPUT
  * @param control_t INPUT
  */
-void fnvEzSpline(double *pos_out, int maxProgN, double t0_in, double t1_in, double x1_in, double control_t)
+inline void fnvEzSpline(double *pos_out, int maxProgN, double t0_in, double t1_in, double x1_in, double control_t)
 {
 	// int according to control period
 	int k0 = (int)floor(t0_in / control_t + 1e-8);
@@ -363,7 +364,7 @@ void fnvEzSpline(double *pos_out, int maxProgN, double t0_in, double t1_in, doub
  * @param t1        INPUT
  * @param control_t INPUT
  */
-void fnvFifthSplineOutputPVA(double *pos_out, double *vel_out, double *acc_out, int maxProgN, double x0, double v0, double a0, double t0, double x1, double v1, double a1, double t1, double control_t)
+inline void fnvFifthSplineOutputPVA(double *pos_out, double *vel_out, double *acc_out, int maxProgN, double x0, double v0, double a0, double t0, double x1, double v1, double a1, double t1, double control_t)
 {
 	double b_spline[6] = { 0 };
 	b_spline[0] = (1.0 / pow(t0 - t1, 5.0)*((t0*t0*t0*t0*t0)*x1*2.0 - (t1*t1*t1*t1*t1)*x0*2.0 + t0*(t1*t1*t1*t1*t1)*v0*2.0 - (t0*t0*t0*t0*t0)*t1*v1*2.0 + t0*(t1*t1*t1*t1)*x0*1.0E+1 - (t0*t0*t0*t0)*t1*x1*1.0E+1 - a0*(t0*t0)*(t1*t1*t1*t1*t1) + a0*(t0*t0*t0)*(t1*t1*t1*t1)*2.0 - a0*(t0*t0*t0*t0)*(t1*t1*t1) + a1*(t0*t0*t0)*(t1*t1*t1*t1) - a1*(t0*t0*t0*t0)*(t1*t1*t1)*2.0 + a1*(t0*t0*t0*t0*t0)*(t1*t1) - (t0*t0)*(t1*t1*t1*t1)*v0*1.0E+1 + (t0*t0*t0)*(t1*t1*t1)*v0*8.0 - (t0*t0*t0)*(t1*t1*t1)*v1*8.0 + (t0*t0*t0*t0)*(t1*t1)*v1*1.0E+1 - (t0*t0)*(t1*t1*t1)*x0*2.0E+1 + (t0*t0*t0)*(t1*t1)*x1*2.0E+1)) / 2.0;
@@ -400,7 +401,7 @@ void fnvFifthSplineOutputPVA(double *pos_out, double *vel_out, double *acc_out, 
  * @param nKTot     INPUT total spline number from the first address
  * @param dControlT INPUT 
  */
-void fnvOnLineSpline(double * dPosIn, double * dVelIn, double * dAccIn, double dTimeNow, double dPosCmd, double dTimeCmd, int nKTot, double dControlT) {
+inline void fnvOnLineSpline(double * dPosIn, double * dVelIn, double * dAccIn, double dTimeNow, double dPosCmd, double dTimeCmd, int nKTot, double dControlT) {
 	int nKNow = (int)floor(dTimeNow / dControlT), nKCmd = (int)floor(dTimeCmd / dControlT), maxProgN = nKTot - nKNow;
 	double x0 = dPosIn[nKNow], v0 = dVelIn[nKNow], a0 = dAccIn[nKNow];
 	fnvFifthSplineOutputPVA(dPosIn + nKNow, dVelIn + nKNow, dAccIn + nKNow, maxProgN, x0, v0, a0, dTimeNow, dPosCmd, 0.0, 0.0, dTimeCmd, dControlT);
@@ -410,7 +411,7 @@ void fnvOnLineSpline(double * dPosIn, double * dVelIn, double * dAccIn, double d
  * @brief tic!
  * 
  */
-void fnvTic() {
+inline void fnvTic() {
 	QueryPerformanceFrequency(&nFreq); 
 	QueryPerformanceCounter(&nBeginTime); 
 }
@@ -421,7 +422,7 @@ void fnvTic() {
  * @param nDispTimeFlag INPUT 1 display the time span
  * @return double       OUTPUT
  */
-double fnvToc(int nDispTimeFlag) {
+inline double fnvToc(int nDispTimeFlag) {
 	QueryPerformanceCounter(&nEndTime);
 	time_end = ((double)(nEndTime.QuadPart) / (double)nFreq.QuadPart);
 	time_start = ((double)(nBeginTime.QuadPart) / (double)nFreq.QuadPart);
@@ -431,7 +432,7 @@ double fnvToc(int nDispTimeFlag) {
 }
 
 
-int fnnSlowDown(double * dptDataIn, int nDataLen, int nSlowTimes, double * dptDataOut) {
+inline int fnnSlowDown(double * dptDataIn, int nDataLen, int nSlowTimes, double * dptDataOut) {
 	int nKout = 0;
 	for (int i = 0; i < nDataLen - 2; i++) {
 		double dIncTemp = (*(dptDataIn + i + 1) - *(dptDataIn + i)) / ((double)nSlowTimes);
@@ -440,7 +441,7 @@ int fnnSlowDown(double * dptDataIn, int nDataLen, int nSlowTimes, double * dptDa
 	return nKout;
 }
 
-int fnnRdFile(char * sFileName, int nRow, int nCol, double * dDataName) {
+inline int fnnRdFile(char * sFileName, int nRow, int nCol, double * dDataName) {
 	FILE * Ftp;
 	double dDataTemp;
 	if ((Ftp = fopen(sFileName, "r")) == NULL) {
@@ -452,7 +453,7 @@ int fnnRdFile(char * sFileName, int nRow, int nCol, double * dDataName) {
 	return 1;
 }
 
-void fnvWtFile(char * sFileName, int nRow, int nCol, double * dDataName) {
+inline void fnvWtFile(char * sFileName, int nRow, int nCol, double * dDataName) {
 	FILE * Ftp = fopen(sFileName, "w");
 	double dDataTemp;
 	for (int i = 0; i < nRow; i++) {
@@ -462,7 +463,7 @@ void fnvWtFile(char * sFileName, int nRow, int nCol, double * dDataName) {
 	fclose(Ftp);
 }
 
-double fndAbsWeight(double dDataIn1, double dDataIn2, char cMode) {
+inline double fndAbsWeight(double dDataIn1, double dDataIn2, char cMode) {
 	if(cMode == 'B') { // choose the bigger one 
 		if(fabs(dDataIn1) >= fabs(dDataIn2)) return dDataIn1;
 		else if(fabs(dDataIn1) < fabs(dDataIn2)) return dDataIn2;
@@ -485,19 +486,19 @@ double fndAbsWeight(double dDataIn1, double dDataIn2, char cMode) {
 	}
 }
 
-double fndGetSign(double dDataIn) {
+inline double fndGetSign(double dDataIn) {
 	if(fabs(dDataIn) > 1e-6) return (dDataIn / fabs(dDataIn));
 	else return 1.0;
 }
 
-double fndAbsLimit(double dDataIn, double dAbsLimit[2]/*should be active value*/) {
+inline double fndAbsLimit(double dDataIn, double dAbsLimit[2]/*should be active value*/) {
 	double dDataOut = dDataIn;
 	if(fabs(dDataIn) < dAbsLimit[0]) dDataOut = fndGetSign(dDataIn) * dAbsLimit[0];
 	if(fabs(dDataIn) > dAbsLimit[1]) dDataOut = fndGetSign(dDataIn) * dAbsLimit[1];
 	return dDataOut;
 }
 
-double fndActivate(double dDataIn, double dTrigger, char cMode) {
+inline double fndActivate(double dDataIn, double dTrigger, char cMode) {
 	if(cMode == 'B') { // bigger trigger
 		if(dDataIn > dTrigger) return 1.0;
 		else return 0.0;
