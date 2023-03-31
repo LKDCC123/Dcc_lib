@@ -4,6 +4,7 @@
         "dcc_mat.h": "c",
         "dcc_con_base.h": "c",
         "stdio.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "array": "cpp"
     }
 }

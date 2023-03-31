@@ -5,6 +5,7 @@
 #define DBASE_HPP
 #include "BaseHeaders.h"
 #include <DMat.hpp>
+#include <DDefs.hpp>
 
 _D_BASE_BEGIN
 
@@ -511,6 +512,12 @@ inline double fndActivate(double dDataIn, double dTrigger, char cMode) {
 		printf("Wrong in fndActivate!\n");
 		return 0.0;
 	}
+}
+
+inline void fnvSwap(double * dptIn1, double * dptIn2) {
+	double dTemp = *dptIn1;
+	*dptIn1 = *dptIn2;
+	*dptIn2 = dTemp;
 }
 
 _D_BASE_END
