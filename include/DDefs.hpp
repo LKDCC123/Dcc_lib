@@ -30,6 +30,12 @@
 #ifndef __MinOf
 #define __MinOf(a, b) (a < b ? a : b)
 #endif
+#ifndef __Mic6
+#define __Mic6 (1e-6)
+#endif
+#ifndef __Mic9
+#define __Mic9 (1e-9)
+#endif
 
 _D_BASE_BEGIN
 
