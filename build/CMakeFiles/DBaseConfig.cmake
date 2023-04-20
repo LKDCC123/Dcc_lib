@@ -8,7 +8,7 @@
 if(1)
     set(DBase_INCLUDE_DIR "D:/_pkg/DPackages/DBase/include")
 endif()
-if(0)
+if(1)
     set(DBase_LIB_DIR     "D:/_pkg/DPackages/DBase/lib"    )
 endif()
 if(0)

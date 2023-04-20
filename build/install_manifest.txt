@@ -3,4 +3,5 @@ D:/_pkg/DPackages/DBase/include/DBase.hpp
 D:/_pkg/DPackages/DBase/include/DDefs.hpp
 D:/_pkg/DPackages/DBase/include/DFuzzy.hpp
 D:/_pkg/DPackages/DBase/include/DMat.hpp
+D:/_pkg/DPackages/DBase/lib/DBase.lib
 D:/_pkg/DPackages/DBase/share/DBase/DBaseConfig.cmake

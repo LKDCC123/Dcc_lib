@@ -1,7 +1,7 @@
 # change these values -------------
 set(PKG_NAME DBase)
 set(${PKG_NAME}_INCLUDE_ON  1)
-set(${PKG_NAME}_LIB_ON      0)
+set(${PKG_NAME}_LIB_ON      1)
 set(${PKG_NAME}_SRC_ON      0)
 # ---------------------------------
 set(PKG_DIR ${CMAKE_SOURCE_DIR})
