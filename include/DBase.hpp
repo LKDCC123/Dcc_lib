@@ -114,7 +114,7 @@ inline void fnvIntergJerkLimit(double *dPosIn, double *dVelIn, double *dAccIn, d
  * @param dLimits   INPUT [nega position limit, posi position limit, nega velocity limit, posi velocity limit, nega acceleration limit, posi acceleration limit]
  * @param dControlT INPUT
  */
-inline void fnvIntegAccLimit(double *dPosIn, double *dVelIn, double dAcc, double dLimits[6], double dControlT) {
+inline void fnvIntergAccLimit(double *dPosIn, double *dVelIn, double dAcc, double dLimits[6], double dControlT) {
 	double dPositionLimit[2];
 	double dVelocityLimit[2];
 	double dAccelerateLimit[2];
@@ -171,6 +171,27 @@ inline double fndFilterTimeLag(double filtered_in, double data_in, double contro
 	filtered_out = (control_t * data_in + Lag_T * filtered_in) / (control_t + Lag_T);
 	return filtered_out;
 }
+
+class c_Filter3Aver {
+public:
+	c_Filter3Aver(double3 dWeight) {
+		for(int i = 0; i < 3; i++) this->m_dWeight[i] = dWeight[i];
+	}
+	~c_Filter3Aver() {}
+	void Init(double data_in) {
+		for(int i = 0; i < 3; i++) this->m_dData[i] = data_in;
+	}
+	double Filter(double data_in) {
+		for(int i = 0; i < 2; i++) this->m_dData[i] = m_dData[i + 1];
+		m_dData[2] = data_in;
+		double data_out = 0.0, weight_sum = 0.0;
+		for(int i = 0; i < 3; i++) data_out += this->m_dWeight[i] * this->m_dData[i], weight_sum += this->m_dWeight[i];
+		return (data_out / weight_sum);
+	}
+private:
+	double m_dWeight[3];
+	double m_dData[3];
+};
 
 /**
  * @brief 5th Spline: generate fifth apline trajectory
