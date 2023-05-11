@@ -279,9 +279,9 @@ inline void fnvDouFourthSpline(double *pos_out, int maxProgN, double x0, double 
 	b_spline[7] = (a2*(t1*t1*t1*t1) + a2*(t2*t2*t2*t2) - (t2*t2*t2)*v1*6.0 - (t2*t2*t2)*v2*6.0 - (t2*t2)*x1*1.2E+1 + (t2*t2)*x2*1.2E+1 + a2*t1*(t2*t2*t2)*2.0 + a2*(t1*t1*t1)*t2*2.0 + (t1*t1)*t2*v1*6.0 - t1*(t2*t2)*v2*1.2E+1 + (t1*t1)*t2*v2*1.8E+1 - a2*(t1*t1)*(t2*t2)*6.0 - t1*t2*x1*2.4E+1 + t1*t2*x2*2.4E+1) / ((t1 - t2)*(t1*(t2*t2)*3.0 - (t1*t1)*t2*3.0 + t1*t1*t1 - t2*t2*t2)*2.0);
 	b_spline[8] = -(t1*x1*-4.0 + t1*x2*4.0 - t2*x1*8.0 + t2*x2*8.0 + a2*(t1*t1*t1) + a2*(t2*t2*t2) + (t1*t1)*v1 + (t1*t1)*v2*3.0 - (t2*t2)*v1*3.0 - (t2*t2)*v2*5.0 - a2*t1*(t2*t2) - a2*(t1*t1)*t2 + t1*t2*v1*2.0 + t1*t2*v2*2.0) / ((t1 - t2)*(t1*(t2*t2)*3.0 - (t1*t1)*t2*3.0 + t1*t1*t1 - t2*t2*t2));
 	b_spline[9] = (x1*-6.0 + x2*6.0 + t1*v1*2.0 + t1*v2*4.0 - t2*v1*2.0 - t2*v2*4.0 + a2*(t1*t1) + a2*(t2*t2) - a2*t1*t2*2.0) / ((t1 - t2)*(t1*(t2*t2)*3.0 - (t1*t1)*t2*3.0 + t1*t1*t1 - t2*t2*t2)*2.0); 
-	int k0 = (int)floor(t0 / control_t + 1e-8);
-	int k1 = (int)floor(t1 / control_t + 1e-8);
-	int k2 = (int)floor(t2 / control_t + 1e-8);
+	int k0 = (int)floor(t0 / control_t + __Mic8);
+	int k1 = (int)floor(t1 / control_t + __Mic8);
+	int k2 = (int)floor(t2 / control_t + __Mic8);
 
 	if (mode_flag == 'T') { // traditional: start from k = 0
 		int k = 0;
@@ -329,8 +329,8 @@ inline void fnvDouFourthSpline(double *pos_out, int maxProgN, double x0, double 
 inline void fnvEzSpline(double *pos_out, int maxProgN, double t0_in, double t1_in, double x1_in, double control_t)
 {
 	// int according to control period
-	int k0 = (int)floor(t0_in / control_t + 1e-8);
-	int k1 = (int)floor(t1_in / control_t + 1e-8);
+	int k0 = (int)floor(t0_in / control_t + __Mic8);
+	int k1 = (int)floor(t1_in / control_t + __Mic8);
 
 	// map to 0s (error would be remarkable if time is too large)
 	double t0 = 0.0;
@@ -348,6 +348,11 @@ inline void fnvEzSpline(double *pos_out, int maxProgN, double t0_in, double t1_i
 	if (k1 == k0) { // jump
 		for (int i = k0; i < maxProgN; i++) {
 			pos_out[i] = x1;
+		}
+	}
+	else if (fabs(x1 - x0) < __Mic8) { // hold
+		for (int i = k0; i < maxProgN; i++) {
+			pos_out[i] = x0;
 		}
 	}
 	else { // spline to x1
@@ -423,7 +428,7 @@ inline void fnvFifthSplineOutputPVA(double *pos_out, double *vel_out, double *ac
  * @param nKTot     INPUT total spline number from the first address
  * @param dControlT INPUT 
  */
-inline void fnvOnLineSpline(double * dPosIn, double * dVelIn, double * dAccIn, double dTimeNow, double dPosCmd, double dTimeCmd, int nKTot, double dControlT) {
+inline void fnvOnLineSpline(double *dPosIn, double *dVelIn, double *dAccIn, double dTimeNow, double dPosCmd, double dTimeCmd, int nKTot, double dControlT) {
 	int nKNow = (int)floor(dTimeNow / dControlT), nKCmd = (int)floor(dTimeCmd / dControlT), maxProgN = nKTot - nKNow;
 	double x0 = dPosIn[nKNow], v0 = dVelIn[nKNow], a0 = dAccIn[nKNow];
 	fnvFifthSplineOutputPVA(dPosIn + nKNow, dVelIn + nKNow, dAccIn + nKNow, maxProgN, x0, v0, a0, dTimeNow, dPosCmd, 0.0, 0.0, dTimeCmd, dControlT);
@@ -454,7 +459,7 @@ inline double fnvToc(int nDispTimeFlag) {
 }
 
 
-inline int fnnSlowDown(double * dptDataIn, int nDataLen, int nSlowTimes, double * dptDataOut) {
+inline int fnnSlowDown(double *dptDataIn, int nDataLen, int nSlowTimes, double *dptDataOut) {
 	int nKout = 0;
 	for (int i = 0; i < nDataLen - 2; i++) {
 		double dIncTemp = (*(dptDataIn + i + 1) - *(dptDataIn + i)) / ((double)nSlowTimes);
@@ -463,7 +468,7 @@ inline int fnnSlowDown(double * dptDataIn, int nDataLen, int nSlowTimes, double 
 	return nKout;
 }
 
-inline int fnnRdFile(char * sFileName, int nRow, int nCol, double * dDataName) {
+inline int fnnRdFile(char *sFileName, int nRow, int nCol, double *dDataName) {
 	FILE * Ftp;
 	double dDataTemp;
 	if ((Ftp = fopen(sFileName, "r")) == NULL) {
@@ -475,7 +480,7 @@ inline int fnnRdFile(char * sFileName, int nRow, int nCol, double * dDataName) {
 	return 1;
 }
 
-inline void fnvWtFile(char * sFileName, int nRow, int nCol, double * dDataName) {
+inline void fnvWtFile(char *sFileName, int nRow, int nCol, double * dDataName) {
 	FILE * Ftp = fopen(sFileName, "w");
 	double dDataTemp;
 	for (int i = 0; i < nRow; i++) {
@@ -535,11 +540,51 @@ inline double fndActivate(double dDataIn, double dTrigger, char cMode) {
 	}
 }
 
-inline void fnvSwap(double * dptIn1, double * dptIn2) {
+inline void fnvSwap(double *dptIn1, double *dptIn2) {
 	double dTemp = *dptIn1;
 	*dptIn1 = *dptIn2;
 	*dptIn2 = dTemp;
 }
+
+class c_AnkSpline {
+	public:
+	c_AnkSpline(double dTc) {
+		// this->SetStep({0.36, 0.016, 0.024, 0.0}); // [m_dPerUp, m_dTHold, m_dTLand, m_dZHold]
+		this->SetStep({0.5, 0.0, 0.1, 0.0015}); // [m_dPerUp, m_dTHold, m_dTLand, m_dZHold]
+		this->m_dTc = dTc;
+	}
+	~c_AnkSpline() {}
+	void SetStep(double4 dParam) {
+		this->m_dPerUp = dParam[0], this->m_dTHold = dParam[1], this->m_dTLand = dParam[2], this->m_dZHold = dParam[3];
+	}
+	double * GetTraX() { return this->m_AnkTraX; }
+	double * GetTraY() { return this->m_AnkTraY; }
+	double * GetTraZ() { return this->m_AnkTraZ; }
+	void fnvUpdateAnkTra(double dTStep, double3 dP0, double3 dPe, double dZStep) {
+		this->fnvGetAnkX(dTStep, dP0[0], dPe[0]);
+		this->fnvGetAnkY(dTStep, dP0[1], dPe[1]);
+		this->fnvGetAnkZ(dTStep, dP0[2], dPe[2], dZStep);
+	}
+	private:
+	const static int nMaxN = 400;
+	double m_AnkTraX[nMaxN], m_AnkTraY[nMaxN], m_AnkTraZ[nMaxN];
+	double m_dTc, m_dPerUp, m_dTHold, m_dTLand, m_dZHold;
+	void fnvGetAnkX(double dTStep, double dX0, double dXe) {
+		fnvFifthSpline(this->m_AnkTraX, this->nMaxN, dX0, 0.0, 0.0, 0.0, dXe, 0.0, 0.0, dTStep, this->m_dTc, 'N');
+	}
+	void fnvGetAnkY(double dTStep, double dY0, double dYe) {
+		fnvFifthSpline(this->m_AnkTraY, this->nMaxN, dY0, 0.0, 0.0, 0.0, dYe, 0.0, 0.0, dTStep, this->m_dTc, 'N');
+	}
+	void fnvGetAnkZ(double dTStep, double dZ0, double dZe, double dZStep) {
+		auto dTp = this->m_dPerUp * (dTStep - m_dTHold - m_dTLand);
+		auto dTh = dTStep - m_dTHold - m_dTLand;
+		auto dTd = dTStep - m_dTLand;
+		fnvFifthSpline(this->m_AnkTraZ, this->nMaxN, dZ0, 0.0, 0.0, 0.0, (dZStep + dZe), 0.0, 0.0, dTp, this->m_dTc, 'N');
+		fnvFifthSpline(this->m_AnkTraZ, this->nMaxN, (dZStep + dZe), 0.0, 0.0, dTp, (this->m_dZHold + dZe), 0.0, 0.0, dTh, this->m_dTc, 'N');
+		fnvEzSpline(this->m_AnkTraZ, this->nMaxN, dTh, dTd, (this->m_dZHold + dZe), this->m_dTc);
+		fnvFifthSpline(this->m_AnkTraZ, this->nMaxN, (this->m_dZHold + dZe), 0.0, 0.0, dTd, dZe, 0.0, 0.0, dTStep, this->m_dTc, 'N');
+	}
+};
 
 _D_BASE_END
 

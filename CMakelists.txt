@@ -12,22 +12,22 @@ link_directories()
 
 aux_source_directory(${CMAKE_SOURCE_DIR} SRC_TEST)
 
-# add_executable(Test
-#     ${SRC_TEST}
-# )
+add_executable(Test
+    ${SRC_TEST}
+)
 
-# target_compile_definitions(Test PUBLIC
-#     _CRT_SECURE_NO_WARNINGS
-#     NDEBUG
-#     UNICODE
-#     CONSOLE
-# )
+target_compile_definitions(Test PUBLIC
+    _CRT_SECURE_NO_WARNINGS
+    NDEBUG
+    UNICODE
+    CONSOLE
+)
 
-# target_compile_options(Test PUBLIC
-#     /nologo
-# )
+target_compile_options(Test PUBLIC
+    /nologo
+)
 
-# target_link_options(Test PUBLIC)
+target_link_options(Test PUBLIC)
 
 # if install
 include(config.cmake)
