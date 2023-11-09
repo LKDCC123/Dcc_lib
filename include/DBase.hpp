@@ -9,14 +9,6 @@
 
 _D_BASE_BEGIN
 
-// for timer ================================================
-static LARGE_INTEGER nFreq;
-static LARGE_INTEGER nBeginTime;
-static LARGE_INTEGER nEndTime;
-static double time_start, time_end, time_;
-static double j_timer = 10.0;
-// for timer ================================================
-
 /**
  * @brief Limitation
  * 
@@ -433,31 +425,6 @@ inline void fnvOnLineSpline(double *dPosIn, double *dVelIn, double *dAccIn, doub
 	double x0 = dPosIn[nKNow], v0 = dVelIn[nKNow], a0 = dAccIn[nKNow];
 	fnvFifthSplineOutputPVA(dPosIn + nKNow, dVelIn + nKNow, dAccIn + nKNow, maxProgN, x0, v0, a0, dTimeNow, dPosCmd, 0.0, 0.0, dTimeCmd, dControlT);
 }
-
-/**
- * @brief tic!
- * 
- */
-inline void fnvTic() {
-	QueryPerformanceFrequency(&nFreq); 
-	QueryPerformanceCounter(&nBeginTime); 
-}
-
-/**
- * @brief toc!
- * 
- * @param nDispTimeFlag INPUT 1 display the time span
- * @return double       OUTPUT
- */
-inline double fnvToc(int nDispTimeFlag) {
-	QueryPerformanceCounter(&nEndTime);
-	time_end = ((double)(nEndTime.QuadPart) / (double)nFreq.QuadPart);
-	time_start = ((double)(nBeginTime.QuadPart) / (double)nFreq.QuadPart);
-	time_ = time_end - time_start; 
-	if (nDispTimeFlag == 1) printf("Time = %lf\n", time_);
-	return time_;
-}
-
 
 inline int fnnSlowDown(double *dptDataIn, int nDataLen, int nSlowTimes, double *dptDataOut) {
 	int nKout = 0;

@@ -48,14 +48,6 @@
 
 _D_BASE_BEGIN
 
-Extern enum en_SupSig {
-    DSup, LSup, RSup, Fly
-};
-
-Extern enum en_Euler {
-    __x, __y, __z, _rl, _pt, _ya
-};
-
 using double2 = std::array<double, 2>;
 using double3 = std::array<double, 3>;
 using double4 = std::array<double, 4>;

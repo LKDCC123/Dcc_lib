@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <Windows.h>
 #include <array>
 
 #define _D_BASE_BEGIN namespace Dcc { namespace BASE_FILES {

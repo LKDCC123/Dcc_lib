@@ -25,7 +25,7 @@ endif()
 if(${PKG_NAME}_LIB_ON) 
     aux_source_directory(${CMAKE_SOURCE_DIR}/src SRC_FILES)
     add_library(${PROJECT_NAME} STATIC ${SRC_FILES})
-    install(FILES ${PROJECT_BINARY_DIR}/Release/${PROJECT_NAME}.lib 
+    install(FILES ${PROJECT_BINARY_DIR}/lib${PROJECT_NAME}.a
         DESTINATION ${CMAKE_INSTALL_PREFIX}/${PKG_NAME}/lib)
 endif()
 

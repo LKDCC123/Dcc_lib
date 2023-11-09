@@ -4,7 +4,7 @@ _D_USING_BASE
 
 c_AnkSpline cAnkL(0.004), cAnkR(0.004);
 FILE *fpt;
-void main() {
+int main() {
     cAnkL.fnvUpdateAnkTra(0.4, {0.0, 0.0, 0.05}, {0.02, -0.02, 0.05}, 0.04);
     cAnkR.fnvUpdateAnkTra(0.4, {0.0, 0.0, 0.05}, {-0.02, 0.02, 0.15}, 0.04);
     fpt = fopen("ankDat.dat", "w");
@@ -16,4 +16,5 @@ void main() {
         fprintf(fpt, "%.6lf\t%.6lf\t%.6lf\n", dAnkRX[i], dAnkRY[i], dAnkRZ[i]);
     }
     fclose(fpt);
+    return true;
 }

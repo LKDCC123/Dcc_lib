@@ -23,11 +23,7 @@ target_compile_definitions(Test PUBLIC
     CONSOLE
 )
 
-target_compile_options(Test PUBLIC
-    /nologo
-)
-
 target_link_options(Test PUBLIC)
 
 # if install
-include(config.cmake)
+include(Config.cmake)
